@@ -289,24 +289,16 @@ h1.main-title {
 .stamp-against { left: -10px;  color: var(--pink); border-color: var(--pink); transform: rotate(-15deg); }
 .stamp-abstain { top: -10px; left: 50%; transform: translateX(-50%); color: #d97706; border-color: #d97706; }
 
-/* FIX: mk-body ו-avatar מוקטנים ומאוזנים */
 .mk-body {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 10px; min-height: 0;
+  gap: 6px; min-height: 0;
 }
-.mk-avatar {
-  /* FIX: הקטנה משמעותית מ-100px ל-70px */
-  width: 70px; height: 70px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--cyan), var(--navy));
-  border: 3px solid #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  display: flex; align-items: center; justify-content: center;
-  /* FIX: אמוג'י קטן יותר בהתאם */
-  font-size: 32px; flex-shrink: 0;
-}
+.mk-avatar { display: none; }
 .mk-name {
-  font-size: clamp(22px, 5.5vw, 28px);
-  font-weight: 900; text-align: center; line-height: 1.1; color: var(--navy);
+  font-size: clamp(24px, 6vw, 32px);
+  font-weight: 900; text-align: center; line-height: 1.2; color: var(--navy);
+  padding: 0 10px;
 }
 .mk-num { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; font-weight: 600; }
 
@@ -387,17 +379,21 @@ h1.main-title {
 /* ══ END SCREEN ══ */
 .end-screen-wrap {
   flex: 1; display: flex; flex-direction: column;
-  align-items: stretch; padding-bottom: 0; min-height: 0;
+  align-items: stretch; padding-bottom: 0; min-height: 0; gap: 10px;
 }
 .end-screen-inner {
   background: rgba(26,35,126,0.8); backdrop-filter: blur(15px);
   border: 3px solid var(--cyan); border-radius: 24px;
-  padding: 30px 20px; text-align: center; color: var(--text-light);
+  padding: 20px 20px 16px; text-align: center; color: var(--text-light);
   box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,188,212,0.2);
   flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 10px; min-height: 0;
+  align-items: center; justify-content: flex-start; gap: 8px; min-height: 0;
   overflow-y: auto;
   animation: pop 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+.end-screen-actions {
+  display: flex; gap: 12px; justify-content: center;
+  width: 100%; flex-shrink: 0; padding: 0 0 4px;
 }
 @keyframes pop { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
 
@@ -611,7 +607,8 @@ h1.main-title {
 
       <div id="end-screen" style="display:none" class="end-screen-wrap">
         <div class="end-screen-inner" id="end-screen-inner"></div>
-        <div class="credit-footer" style="padding:10px 16px;flex-shrink:0">פיתוח: גיל פלדמן</div>
+        <div class="end-screen-actions" id="end-screen-actions"></div>
+        <div class="credit-footer" style="padding:4px 16px;flex-shrink:0">פיתוח: גיל פלדמן</div>
       </div>
 
       <div class="swipe-hint" id="swipe-hint">
@@ -1123,14 +1120,14 @@ function endGame(won) {
       <div><div class="win-stat-label">🎯 דיוק</div><div class="win-stat-value" style="color:var(--cyan)">${pct}%</div></div>
       <div><div class="win-stat-label">🔥 רצף מקס'</div><div class="win-stat-value" style="color:#f59e0b">${gs.maxStreak}</div></div>
     </div>
-    ${renderLeaderboardHTML(gs.score)}
-    <div style="display:flex;gap:12px;justify-content:center;width:100%;margin-top:20px">
+    ${renderLeaderboardHTML(gs.score)}`;
+
+  document.getElementById("end-screen-actions").innerHTML = `
       <button class="btn btn-blue" onclick="restartGame()" style="flex:1;font-size:14px;padding:12px 10px">🔄 שחק שוב</button>
       <button onclick="window.open('https://wa.me/?text=${shareText}','_blank')"
         style="flex:1;background:linear-gradient(135deg,#128C7E,#25D366);border:none;border-radius:12px;padding:12px 10px;color:#fff;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 #0d6e62, 0 8px 15px rgba(37,211,102,0.3);position:relative;top:0;transition:all 0.1s;"
         onmousedown="this.style.top='4px';this.style.boxShadow='none';" onmouseup="this.style.top='0';this.style.boxShadow='0 4px 0 #0d6e62, 0 8px 15px rgba(37,211,102,0.3)';">
-        📲 שתף</button>
-    </div>`;
+        📲 שתף</button>`;
 }
 
 function setupSwipe() {
