@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ══ GAME DESIGN OVERHAUL ══ */
 :root {
   --navy:    #1a237e;
   --navy2:   #1e2d7d;
@@ -19,8 +18,6 @@
   --border:  rgba(26,35,126,0.12);
   --muted:   #6e7fb8;
   --shadow:  0 4px 24px rgba(26,35,126,0.10);
-  
-  /* הוספתי משתני תאורה/משחק חדשים מבוססים על הפלטה */
   --game-bg: #0d1240; 
   --text-light: #ffffff;
   --muted-light: #8e9be0;
@@ -32,7 +29,6 @@
 
 body {
   min-height: 100dvh;
-  /* שינוי משמעותי 1: רקע כהה ודרמטי שגורם לצבעים לזרוח */
   background: radial-gradient(circle at top, var(--navy2) 0%, var(--game-bg) 80%);
   font-family: 'Heebo', 'Arial Hebrew', Arial, sans-serif;
   direction: rtl;
@@ -42,7 +38,6 @@ body {
   user-select: none;
 }
 
-/* אפקט "רשת" עתידני ברקע */
 body::before {
   content: '';
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -50,7 +45,6 @@ body::before {
     linear-gradient(rgba(0,188,212,0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,188,212,0.05) 1px, transparent 1px);
   background-size: 30px 30px;
-  perspective: 1000px;
 }
 
 #app { position: relative; z-index: 1; }
@@ -79,7 +73,6 @@ body::before {
   box-shadow: var(--shadow-neon);
 }
 
-/* ══ BUTTONS - תחושת ארקייד מישושית ══ */
 .btn {
   padding: 14px 24px; border-radius: 12px; border: none;
   font-weight: 800; font-size: 16px; letter-spacing: 0.5px;
@@ -123,7 +116,6 @@ body::before {
   border-radius: 10px; padding: 12px 16px;
 }
 
-/* ══ HOME ══ */
 .home-wrap { max-width: 680px; margin: 0 auto; padding: 40px 16px 60px; }
 
 h1.main-title {
@@ -141,7 +133,6 @@ h1.main-title {
 .accent-bar span:nth-child(2) { width: 20px; background: var(--lime); color: var(--lime); }
 .accent-bar span:nth-child(3) { width: 10px; background: var(--pink); color: var(--pink); }
 
-/* ══ VOTE HERO (לוח הבקרה בכניסה) ══ */
 .vote-hero {
   margin: 30px 0 20px;
   background: rgba(26,35,126,0.6);
@@ -198,7 +189,6 @@ h1.main-title {
 .play-date  { color: var(--muted-light); font-size: 11px; margin-top: 2px; text-align: center;}
 .play-vote-type { font-size: 9px; letter-spacing: 3px; font-weight: 700; color: var(--cyan); margin-bottom: 2px; text-transform: uppercase; text-align: center; }
 
-/* חלונית הסטטיסטיקה העליונה */
 .stats-bar {
   display: flex; justify-content: space-between; align-items: center;
   background: rgba(0,0,0,0.3);
@@ -219,7 +209,6 @@ h1.main-title {
 .progress-wrap { height: 6px; background: rgba(0,0,0,0.3); border-radius: 6px; margin-bottom: 6px; overflow: hidden; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05);}
 .progress-bar  { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--cyan), var(--lime)); transition: width 0.4s ease; width: 0%; box-shadow: 0 0 10px var(--cyan); }
 
-/* מדי תזמון והתקדמות */
 .timer-wrap { height: 8px; background: rgba(0,0,0,0.4); border-radius: 8px; margin-bottom: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;}
 .timer-bar {
   height: 100%; border-radius: 8px; width: 100%;
@@ -236,11 +225,14 @@ h1.main-title {
 }
 @keyframes pulseUrgent { from { opacity: 1; } to { opacity: 0.6; } }
 
-/* ══ DECK & CARDS (תלת מימד וצלליות) ══ */
+/* ══ DECK & CARDS — FIXED ══ */
 .deck-area {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  position: relative; perspective: 1000px; padding: 10px; min-height: 0;
+  position: relative; perspective: 1000px;
+  padding: 10px; min-height: 0;
+  /* FIX: הגבלת גובה מקסימלי כדי שהכרטיס לא יגדל מעבר לנראה */
+  max-height: 340px;
 }
 .stack-bg {
   position: absolute; border-radius: 24px; pointer-events: none;
@@ -251,31 +243,36 @@ h1.main-title {
 
 .swipe-card {
   position: relative;
-  width: 100%; max-width: 380px; height: 100%;
+  width: 100%; max-width: 380px;
+  /* FIX: במקום height:100% שגרם לכרטיס להיות גדול מדי — גובה קבוע וגמיש */
+  height: 100%;
   background: var(--surface);
   border: 4px solid var(--surface);
   border-radius: 24px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 0 2px rgba(255,255,255,0.5);
   display: flex; flex-direction: column;
-  padding: 20px;
+  /* FIX: padding מופחת */
+  padding: 14px 16px;
   cursor: grab; user-select: none; touch-action: none;
   z-index: 10;
-  color: var(--navy); /* הטקסט על הכרטיס הלבן */
+  color: var(--navy);
+  overflow: hidden;
 }
 .swipe-card:active { cursor: grabbing; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
 
 .card-vote-strip {
-  background: rgba(26,35,126,0.04);
-  border: 1.5px solid rgba(26,35,126,0.1);
-  border-radius: 10px; padding: 7px 10px;
-  text-align: center; flex-shrink: 0; margin-bottom: 10px;
+  background: rgba(26,35,126,0.06);
+  border: 1.5px solid rgba(26,35,126,0.12);
+  border-radius: 10px; padding: 6px 10px;
+  text-align: center; flex-shrink: 0; margin-bottom: 8px;
 }
 .card-vote-eyebrow {
   font-size: 9px; letter-spacing: 2px; font-weight: 700;
-  color: var(--cyan); display: block; margin-bottom: 3px; text-transform: uppercase;
+  color: var(--cyan); display: block; margin-bottom: 2px; text-transform: uppercase;
 }
 .card-vote-name {
-  font-size: 12px; font-weight: 700; color: var(--navy); line-height: 1.4;
+  /* FIX: גודל טקסט מורחב לקריאות */
+  font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.4;
 }
 
 .stamp {
@@ -292,19 +289,29 @@ h1.main-title {
 .stamp-against { left: -10px;  color: var(--pink); border-color: var(--pink); transform: rotate(-15deg); }
 .stamp-abstain { top: -10px; left: 50%; transform: translateX(-50%); color: #d97706; border-color: #d97706; }
 
-.mk-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; min-height: 0;}
-.mk-avatar {
-  width: 100px; height: 100px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--cyan), var(--navy));
-  border: 4px solid #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 45px; flex-shrink: 0;
+/* FIX: mk-body ו-avatar מוקטנים ומאוזנים */
+.mk-body {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; min-height: 0;
 }
-.mk-name { font-size: clamp(24px, 6vw, 32px); font-weight: 900; text-align: center; line-height: 1.1; color: var(--navy); }
+.mk-avatar {
+  /* FIX: הקטנה משמעותית מ-100px ל-70px */
+  width: 70px; height: 70px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--navy));
+  border: 3px solid #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center;
+  /* FIX: אמוג'י קטן יותר בהתאם */
+  font-size: 32px; flex-shrink: 0;
+}
+.mk-name {
+  font-size: clamp(22px, 5.5vw, 28px);
+  font-weight: 900; text-align: center; line-height: 1.1; color: var(--navy);
+}
 .mk-num { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; font-weight: 600; }
 
 .reveal-badge {
-  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
   font-size: 11px; font-weight: 700; font-family: monospace;
   padding: 3px 14px; border-radius: 20px; white-space: nowrap;
   opacity: 0; transition: opacity 0.3s 0.2s; pointer-events: none;
@@ -314,7 +321,7 @@ h1.main-title {
 .reveal-badge.against { color: var(--pink); background: rgba(240,67,106,0.1); border: 1px solid rgba(240,67,106,0.3); }
 .reveal-badge.abstain { color: #d97706; background: rgba(217,119,6,0.1); border: 1px solid rgba(217,119,6,0.3); }
 
-/* ══ CONTROLS (Arcade Buttons) ══ */
+/* ══ CONTROLS ══ */
 .controls { display: flex; justify-content: center; gap: 20px; padding: 20px 0 10px; flex-shrink: 0; }
 .ctrl-btn {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -348,7 +355,7 @@ h1.main-title {
   padding-bottom: 5px; flex-shrink: 0; font-family: monospace; font-weight: 600;
 }
 
-/* ══ FEEDBACK (הודעות קופצות) ══ */
+/* ══ FEEDBACK ══ */
 .streak-badge {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 13px; font-weight: 900; padding: 4px 12px; border-radius: 20px;
@@ -470,7 +477,7 @@ h1.main-title {
 .load-logo-bar span:nth-child(3) { height: 24px; background: var(--pink); animation-delay: 0.3s; box-shadow: 0 0 10px var(--pink);}
 @keyframes barPulse { 0%,100% { opacity: 1; transform: scaleY(1); } 50% { opacity: 0.5; transform: scaleY(0.75); } }
 
-/* ANIMATIONS FOR CARDS */
+/* CARD ANIMATIONS */
 .swipe-card.animating { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.4s ease; }
 .swipe-card.fly-right { transform: translateX(150%) rotate(25deg) !important; opacity: 0; }
 .swipe-card.fly-left  { transform: translateX(-150%) rotate(-25deg) !important; opacity: 0; }
@@ -484,7 +491,6 @@ h1.main-title {
 
 @keyframes scoreBump { 0%{transform:scale(1)} 50%{transform:scale(1.5);color:#fff} 100%{transform:scale(1)} }
 .score-bump { animation: scoreBump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
 </style>
 </head>
 <body>
@@ -648,7 +654,8 @@ h1.main-title {
       </div>
       <div class="modal-step">
         <div class="modal-step-icon">⏱</div>
-        <div class="modal-step-text">יש לכם <strong>זמן מוגבל</strong> לכל כרטיס — תזמן תלוי ברמת הקושי</div>
+        <!-- FIX: תיקון שגיאת כתיב "תזמן" → "הזמן" -->
+        <div class="modal-step-text">יש לכם <strong>זמן מוגבל</strong> לכל כרטיס — הזמן תלוי ברמת הקושי</div>
       </div>
       <div class="modal-step">
         <div class="modal-step-icon">❤️</div>
@@ -679,12 +686,8 @@ h1.main-title {
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// הגדרות ההצבעה
-// ══════════════════════════════════════════════
-const VOTE_ID        = "4138";                       // ← מזהה ההצבעה מאתר הכנסת
-const VOTE_DISPLAY_NAME = "אישור תכנית ההתנתקות";   // ← השם שיוצג בולט במשחק
-// ══════════════════════════════════════════════
+const VOTE_ID        = "4138";
+const VOTE_DISPLAY_NAME = "אישור תכנית ההתנתקות";
 
 const SWIPE_URL = "https://script.google.com/macros/s/AKfycbw0X88LfUpONMGUNExSmQtxYpdOclpGQlh3Zdqjg1AeX1zkjMp2BYbjnAIuwUyxExb4/exec";
 
@@ -715,9 +718,6 @@ function showScreen(id) {
 }
 function setLoadMsg(msg) { document.getElementById("load-msg").textContent = msg; }
 
-// ══════════════════════════════════════════════
-// LEADERBOARD
-// ══════════════════════════════════════════════
 function readLeaderboard()   { try { return JSON.parse(localStorage.getItem(LB_KEY) || "[]"); } catch { return []; } }
 function writeLeaderboard(lb){ try { localStorage.setItem(LB_KEY, JSON.stringify(lb)); } catch {} }
 
@@ -774,9 +774,6 @@ function clearLeaderboard() {
   }
 }
 
-// ══════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════
 let theGame = null;
 
 function normalizeVote(title) {
@@ -839,9 +836,6 @@ async function loadGame(bustCache = false) {
   }
 }
 
-// ══════════════════════════════════════════════
-// DIFFICULTY
-// ══════════════════════════════════════════════
 const DIFF_COUNT   = { easy: 10, medium: 20, hard: 30 };
 const DIFF_SECONDS = { easy: 10, medium: 6,  hard: 4  };
 let currentDiff = "medium";
@@ -852,9 +846,6 @@ function setDiff(d) {
   document.getElementById("diff-" + d).classList.add("active");
 }
 
-// ══════════════════════════════════════════════
-// GAME
-// ══════════════════════════════════════════════
 let gs       = null;
 let locked   = false;
 let cardTimer = null;
@@ -982,9 +973,6 @@ function renderCard(first = false) {
   else setTimeout(() => startCardTimer(), 350);
 }
 
-// ══════════════════════════════════════════════
-// SWIPE
-// ══════════════════════════════════════════════
 let cardStartTime = 0;
 
 function doSwipe(direction) {
@@ -1145,9 +1133,6 @@ function endGame(won) {
     </div>`;
 }
 
-// ══════════════════════════════════════════════
-// TOUCH/MOUSE SWIPE
-// ══════════════════════════════════════════════
 function setupSwipe() {
   const card = document.getElementById("swipe-card");
   let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
@@ -1197,16 +1182,10 @@ function setupSwipe() {
   window.addEventListener("touchend",  () => onEnd());
 }
 
-// ══════════════════════════════════════════════
-// MODAL
-// ══════════════════════════════════════════════
 function openInstructions() { document.getElementById("modal-instructions").style.display = "flex"; }
 function dismissModal()     { document.getElementById("modal-instructions").style.display = "none"; }
 function closeModal(e)      { if (e.target === document.getElementById("modal-instructions")) dismissModal(); }
 
-// ══════════════════════════════════════════════
-// BOOT
-// ══════════════════════════════════════════════
 loadGame();
 </script>
 </body>
