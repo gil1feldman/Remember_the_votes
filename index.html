@@ -231,7 +231,6 @@ h1.main-title {
   align-items: center; justify-content: center;
   position: relative; perspective: 1000px;
   padding: 10px; min-height: 0;
-  /* FIX: הגבלת גובה מקסימלי כדי שהכרטיס לא יגדל מעבר לנראה */
   max-height: 340px;
 }
 .stack-bg {
@@ -244,14 +243,12 @@ h1.main-title {
 .swipe-card {
   position: relative;
   width: 100%; max-width: 380px;
-  /* FIX: במקום height:100% שגרם לכרטיס להיות גדול מדי — גובה קבוע וגמיש */
   height: 100%;
   background: var(--surface);
   border: 4px solid var(--surface);
   border-radius: 24px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 0 2px rgba(255,255,255,0.5);
   display: flex; flex-direction: column;
-  /* FIX: padding מופחת */
   padding: 14px 16px;
   cursor: grab; user-select: none; touch-action: none;
   z-index: 10;
@@ -271,7 +268,6 @@ h1.main-title {
   color: var(--cyan); display: block; margin-bottom: 2px; text-transform: uppercase;
 }
 .card-vote-name {
-  /* FIX: גודל טקסט מורחב לקריאות */
   font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.4;
 }
 
@@ -651,7 +647,6 @@ h1.main-title {
       </div>
       <div class="modal-step">
         <div class="modal-step-icon">⏱</div>
-        <!-- FIX: תיקון שגיאת כתיב "תזמן" → "הזמן" -->
         <div class="modal-step-text">יש לכם <strong>זמן מוגבל</strong> לכל כרטיס — הזמן תלוי ברמת הקושי</div>
       </div>
       <div class="modal-step">
@@ -683,8 +678,10 @@ h1.main-title {
 </div>
 
 <script>
-const VOTE_ID        = "4138";
-const VOTE_DISPLAY_NAME = "אישור תכנית ההתנתקות";
+// ── קונפיגורציה ──────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const VOTE_ID = params.get("vote") || "4138";
+let VOTE_DISPLAY_NAME = "";
 
 const SWIPE_URL = "https://script.google.com/macros/s/AKfycbw0X88LfUpONMGUNExSmQtxYpdOclpGQlh3Zdqjg1AeX1zkjMp2BYbjnAIuwUyxExb4/exec";
 
@@ -809,6 +806,9 @@ async function loadGame(bustCache = false) {
         faction: (d.FactionName || "").trim(),
       }));
     if (members.length < 3) throw new Error("לא נמצאו מספיק חברי כנסת עם הצבעות תקינות");
+
+    // שם ההצבעה נטען מה-API; אם לא קיים — משתמשים במזהה כגיבוי
+    VOTE_DISPLAY_NAME = header.ItemTitle || header.SubjectName || header.VoteSubject || `הצבעה ${VOTE_ID}`;
 
     theGame = {
       voteId:    VOTE_ID,
