@@ -473,7 +473,7 @@ h1.main-title { color:var(--text-light);font-size:clamp(28px,6vw,42px);font-weig
 ══════════════════════════════════════ */
 const DEFAULT_VOTE_ID = "4138";
 const urlParams = new URLSearchParams(window.location.search);
-const G_ID = urlParams.get("G");
+const G_ID = urlParams.get("G") || urlParams.get("vote");
 const S_ID = urlParams.get("S");
 const VOTE_ID = G_ID || S_ID || DEFAULT_VOTE_ID;
 const MODE = S_ID ? "stats" : "game";  // S → stats, everything else → game
